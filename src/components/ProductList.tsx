@@ -21,7 +21,7 @@ export const ProductList: React.FC<ProductListProps> = ({
   const [selectedCategory, setSelectedCategory] = useState('');
 
   const filteredProducts = products.filter(product => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = !selectedCategory || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
@@ -75,8 +75,8 @@ export const ProductList: React.FC<ProductListProps> = ({
           >
             <option value="">Todas las categorías</option>
             {categories.map(category => (
-              <option key={category.name} value={category.name}>
-                {category.name}
+              <option key={category.nombre} value={category.nombre}>
+                {category.nombre}
               </option>
             ))}
           </select>
@@ -124,7 +124,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                     <td className="px-6 py-4">
                       <div>
                         <div className="text-sm font-medium text-gray-900">
-                          {product.name}
+                          {product.nombre}
                         </div>
                         <div className="text-sm text-gray-500 truncate max-w-xs">
                           {product.description}

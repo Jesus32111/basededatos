@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT m.id, m.tipo, m.cantidad, m.fecha, m.observaciones,
-             p.name AS producto, u.nombre AS usuario
+             p.nombre AS producto, u.nombre AS usuario
       FROM movimientos m
       JOIN products p ON m.producto_id = p.id
       JOIN usuarios u ON m.usuario_id = u.id

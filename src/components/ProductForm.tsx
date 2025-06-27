@@ -16,7 +16,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   onClose
 }) => {
   const [formData, setFormData] = useState({
-    name: '',
+    nombre: '',
     description: '',
     category: '',
     price: 0,
@@ -27,9 +27,9 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   useEffect(() => {
     if (product) {
       setFormData({
-        name: product.name,
+        nombre: product.nombre,
         description: product.description,
-        category: product.category,
+        category: product.category.toString(), // Asegura que sea string para el <select>
         price: product.price,
         stock: product.stock,
         min_stock: product.min_stock
@@ -46,8 +46,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'stock' || name === 'min_stock' 
-        ? parseFloat(value) || 0 
+      [name]: name === 'price' || name === 'stock' || name === 'min_stock'
+        ? parseFloat(value) || 0
         : value
     }));
   };
@@ -69,14 +69,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
               Nombre *
             </label>
             <input
               type="text"
-              id="name"
-              name="name"
-              value={formData.name}
+              id="nombre"
+              name="nombre"
+              value={formData.nombre}
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
@@ -113,8 +113,8 @@ export const ProductForm: React.FC<ProductFormProps> = ({
             >
               <option value="">Seleccionar categoría</option>
               {categories.map(category => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
+                <option key={category.id} value={category.id.toString()}>
+                  {category.nombre}
                 </option>
               ))}
             </select>

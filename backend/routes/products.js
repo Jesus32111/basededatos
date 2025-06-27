@@ -3,10 +3,25 @@ import { pool } from '../db.js';
 
 const router = express.Router();
 
-// Obtener todos los productos
+// Obtener todos los productos con el nombre de la categoría
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM products ORDER BY updated_at DESC');
+    const [rows] = await pool.query(`
+      SELECT 
+        p.id, 
+        p.nombre, 
+        p.description, 
+        p.category AS category_id, 
+        c.nombre AS category, 
+        p.price, 
+        p.stock, 
+        p.min_stock, 
+        p.created_at, 
+        p.updated_at
+      FROM products p
+      LEFT JOIN categories c ON p.category = c.id
+      ORDER BY p.updated_at DESC
+    `);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -15,14 +30,16 @@ router.get('/', async (req, res) => {
 
 // Crear nuevo producto
 router.post('/', async (req, res) => {
-  const { name, description, category, price, stock, min_stock } = req.body;
+  console.log('📦 Producto recibido:', req.body);
+  const { nombre, description, category, price, stock, min_stock } = req.body;
   try {
     const [result] = await pool.query(
-      `INSERT INTO products (name, description, category, price, stock, min_stock) VALUES (?, ?, ?, ?, ?, ?)`,
-      [name, description, category, price, stock, min_stock]
+      `INSERT INTO products (nombre, description, category, price, stock, min_stock) VALUES (?, ?, ?, ?, ?, ?)`,
+      [nombre, description, category, price, stock, min_stock]
     );
     res.status(201).json({ id: result.insertId });
   } catch (err) {
+    console.error('❌ Error en la creación del producto:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -30,11 +47,11 @@ router.post('/', async (req, res) => {
 // Actualizar producto
 router.put('/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, category, price, stock, min_stock } = req.body;
+  const { nombre, description, category, price, stock, min_stock } = req.body;
   try {
     await pool.query(
-      `UPDATE products SET name=?, description=?, category=?, price=?, stock=?, min_stock=?, updated_at=NOW() WHERE id=?`,
-      [name, description, category, price, stock, min_stock, id]
+      `UPDATE products SET nombre=?, description=?, category=?, price=?, stock=?, min_stock=?, updated_at=NOW() WHERE id=?`,
+      [nombre, description, category, price, stock, min_stock, id]
     );
     res.json({ message: 'Producto actualizado' });
   } catch (err) {

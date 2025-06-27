@@ -6,7 +6,7 @@ const router = express.Router();
 // Obtener todas las categorías
 router.get('/', async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT * FROM categories ORDER BY name');
+    const [rows] = await pool.query('SELECT * FROM categories ORDER BY nombre');
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener categorías:', error);
@@ -19,7 +19,7 @@ router.post('/', async (req, res) => {
   const { nombre, description } = req.body;
   try {
     const [result] = await pool.query(
-      'INSERT INTO categories (name, description) VALUES (?, ?)',
+      'INSERT INTO categories (nombre, description) VALUES (?, ?)',
       [nombre, description]
     );
     res.status(201).json({ id: result.insertId, nombre, description });
